@@ -1,0 +1,9 @@
+title=My awesome blog
+description=Some good description here...
+author=John Doe
+ftp_server=ftp.example.com
+ftp_login=mylogin
+ftp_password=mypassword
+ftp_port=21
+ftp_dir=my/upload/dir
+
