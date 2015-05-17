@@ -1,5 +1,6 @@
 # nanoblog.py
 
+import datetime
 import ftplib
 import os
 import sys
@@ -44,7 +45,7 @@ class NanoBlog:
         return data
 
     def read_source_file(self, name):
-        if not name.endswith(".txt"): 
+        if not name.endswith(".txt"):
             name = name + ".txt"
         path = os.path.join(self.dir, name)
         with open(path, "r") as f:
@@ -120,7 +121,7 @@ class NanoBlog:
         path = os.path.join(self.dir, "html")
         filenames = os.listdir(path)
 
-        print "Connecting to: %s..." % self.config['ftp_server'], 
+        print "Connecting to: %s..." % self.config['ftp_server'],
         ftp = ftplib.FTP()
         port = int(self.config['ftp_port'])
         ftp.connect(self.config['ftp_server'], port)
@@ -145,7 +146,21 @@ class NanoBlog:
             print ftp.quit()
 
     def cmd_create(self, filename):
-        raise NotImplementedError
+        # FIXME: will happily overwrite existing files
+        if not filename.endswith(".txt"):
+            filename = filename + ".txt"
+        now = datetime.datetime.today()
+        t9 = now.timetuple()
+        ds = "%04d-%02d-%02d %02d:%02d:%02d" % t9[:6]
+        temp_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])),
+                                 "sample-post.txt")
+        post_template = open(temp_path).read()
+        post_template = post_template.replace("2015-01-01 00:00:00", ds)
+        post_path = os.path.join(self.dir, "source", filename)
+        with open(post_path, 'w') as f:
+            f.write(post_template)
+        print "Starting editor..."
+        os.system("{0} {1}".format(self.config['editor'], post_path))
 
     def cmd_edit(self, filename):
         raise NotImplementedError
