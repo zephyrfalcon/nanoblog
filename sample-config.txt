@@ -6,4 +6,5 @@ ftp_login=mylogin
 ftp_password=mypassword
 ftp_port=21
 ftp_dir=my/upload/dir
+ftp_mode=PASV
 

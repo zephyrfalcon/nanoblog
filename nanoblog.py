@@ -3,6 +3,7 @@
 import ftplib
 import os
 import sys
+import StringIO
 import markdown
 
 __usage__ = """\
@@ -74,12 +75,14 @@ class NanoBlog:
     def cmd_build(self):
         path = os.path.join(self.dir, "source")
         filenames = [fn for fn in os.listdir(path) if fn.endswith(".txt")]
+        index_info = []
         for fn in filenames:
             print "Writing: %s..." % fn,
             full_path = os.path.join(path, fn)
             meta, data = self.read_source_file(full_path)
             md_data = markdown.markdown(data)
             temp = self.template
+            index_info.append([fn, meta['title'], meta['created']])
             # all of these are optional, in theory:
             temp = temp.replace('<**TITLE**>', meta['title'])
             temp = temp.replace('<**BODY**>', md_data)
@@ -89,7 +92,29 @@ class NanoBlog:
             with open(out_path, 'w') as g:
                 g.write(temp)
             print "OK"
+        self._create_index_page(index_info)
         print "All done"
+
+    def _create_index_page(self, index_info):
+        print "Writing: index.html...",
+        index_info.sort(key=lambda x: x[2])
+        sio = StringIO.StringIO()
+        sio.write('<table id="nb_index_table">\n')
+        for (filename, title, created) in index_info:
+            sio.write("<tr>\n")
+            sio.write('<td class="nb_created">{0}</td>\n'.format(created[:10]))
+            sio.write('<td class="nb_title"><a href="{0}">{1}</a></td>\n'.format(
+                filename.replace(".txt", ".html"), title))
+            sio.write("</tr>\n")
+        sio.write("</table>\n")
+
+        temp = self.template
+        temp = temp.replace("<**TITLE**>", self.config['title'])
+        temp = temp.replace("<**BODY**>", sio.getvalue())
+        out_path = os.path.join(self.dir, "html", "index.html")
+        with open(out_path, 'w') as g:
+            g.write(temp)
+        print "OK"
 
     def cmd_upload(self):
         path = os.path.join(self.dir, "html")
@@ -119,6 +144,12 @@ class NanoBlog:
         finally:
             print ftp.quit()
 
+    def cmd_create(self, filename):
+        raise NotImplementedError
+
+    def cmd_edit(self, filename):
+        raise NotImplementedError
+
 if __name__ == "__main__":
 
     if not sys.argv[1:]:
@@ -130,5 +161,5 @@ if __name__ == "__main__":
 
     nanoblog = NanoBlog(".")
     f = getattr(nanoblog, "cmd_" + cmd)
-    f()
+    f(*rest)
 

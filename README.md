@@ -14,4 +14,8 @@ A directory containing:
 * A directory `html` where generated .html files will be put; anything
   else that must be uploaded should be put here as well
 
+### Requirements ###
+
+* Python 2.x 
+* [The Markdown library](https://pypi.python.org/pypi/Markdown/)
 
