@@ -16,8 +16,8 @@ A directory containing:
 
 NanoBlog does:
 
-* take all posts in the source directory, and generate HTML files from
-  them
+* take all posts in the source directory (containing Markdown and some
+  metadata), and generate HTML files from them
 * create an index page (consisting of a list of all posts, ordered by
   date)
 * use your favorite editor to let you create/edit posts
@@ -30,8 +30,10 @@ NanoBlog does not:
 * create directories for you
 * have a "preview" option (point your browser to the generated .html
   file instead)
-* let you mark posts as "private" (write your post in a different
-  directory, then move it to the source directory when ready)
+* let you mark posts as "private" so they won't be built or uploaded (write your
+  post in a different directory, then move it to the source directory when ready)
+* have rich metadata for posts; no author, last date/time updated, tags,
+  etc
 * keep track of which generated files have changed (i.e. it uploads
   everything, all the time)
 * provide you with professional-looking HTML or CSS to start with

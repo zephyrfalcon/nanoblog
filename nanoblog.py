@@ -87,7 +87,7 @@ class NanoBlog:
             # all of these are optional, in theory:
             temp = temp.replace('<**TITLE**>', meta['title'])
             temp = temp.replace('<**BODY**>', md_data)
-            temp = temp.replace('<**CREATED**>', meta['created'])
+            temp = temp.replace('<**CREATED**>', meta['created'][:10])
             out_path = os.path.join(self.dir, "html", fn.replace(".txt", ".html"))
             with open(out_path, 'w') as g:
                 g.write(temp)
@@ -159,7 +159,7 @@ class NanoBlog:
             temp_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])),
                                      "sample-post.txt")
             post_template = open(temp_path).read()
-            post_template = post_template.replace("2015-01-01 00:00:00", ds)
+            post_template = post_template.replace("1900-01-01 00:00:00", ds)
             with open(post_path, 'w') as f:
                 f.write(post_template)
         print "Starting editor..."
@@ -172,9 +172,12 @@ if __name__ == "__main__":
         sys.exit(1)
 
     cmd, rest = sys.argv[1], sys.argv[2:]
-    print (cmd, rest)
 
     nanoblog = NanoBlog(".")
-    f = getattr(nanoblog, "cmd_" + cmd)
-    f(*rest)
+    try:
+        f = getattr(nanoblog, "cmd_" + cmd)
+    except AttributeError:
+        print >> sys.stderr, "Unknown command:", cmd
+    else:
+        f(*rest)
 
