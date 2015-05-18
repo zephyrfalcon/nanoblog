@@ -1,6 +1,5 @@
 title=Title of post
 created=2015-01-01 00:00:00
-modified=2015-01-01 00:00:00
 ---
 text here...
 

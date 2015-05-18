@@ -70,7 +70,7 @@ class NanoBlog:
         for fn in filenames:
             full_path = os.path.join(path, fn)
             meta, _ = self.read_source_file(full_path)
-            print fn, meta['created']
+            print fn, "\t::", meta['created'], "::", meta['title']
         print "%d file(s)" % len(filenames)
 
     def cmd_build(self):
@@ -88,7 +88,6 @@ class NanoBlog:
             temp = temp.replace('<**TITLE**>', meta['title'])
             temp = temp.replace('<**BODY**>', md_data)
             temp = temp.replace('<**CREATED**>', meta['created'])
-            temp = temp.replace('<**MODIFIED**>', meta['modified'])
             out_path = os.path.join(self.dir, "html", fn.replace(".txt", ".html"))
             with open(out_path, 'w') as g:
                 g.write(temp)
@@ -99,6 +98,7 @@ class NanoBlog:
     def _create_index_page(self, index_info):
         print "Writing: index.html...",
         index_info.sort(key=lambda x: x[2])
+        index_info.reverse()
         sio = StringIO.StringIO()
         sio.write('<table id="nb_index_table">\n')
         for (filename, title, created) in index_info:
@@ -112,6 +112,8 @@ class NanoBlog:
         temp = self.template
         temp = temp.replace("<**TITLE**>", self.config['title'])
         temp = temp.replace("<**BODY**>", sio.getvalue())
+        temp = temp.replace("<**CREATED**>",
+                datetime.datetime.today().isoformat())
         out_path = os.path.join(self.dir, "html", "index.html")
         with open(out_path, 'w') as g:
             g.write(temp)
@@ -145,25 +147,23 @@ class NanoBlog:
         finally:
             print ftp.quit()
 
-    def cmd_create(self, filename):
-        # FIXME: will happily overwrite existing files
+    def cmd_edit(self, filename):
         if not filename.endswith(".txt"):
             filename = filename + ".txt"
-        now = datetime.datetime.today()
-        t9 = now.timetuple()
-        ds = "%04d-%02d-%02d %02d:%02d:%02d" % t9[:6]
-        temp_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])),
-                                 "sample-post.txt")
-        post_template = open(temp_path).read()
-        post_template = post_template.replace("2015-01-01 00:00:00", ds)
         post_path = os.path.join(self.dir, "source", filename)
-        with open(post_path, 'w') as f:
-            f.write(post_template)
+        # if the file doesn't exist yet, create it
+        if not os.path.exists(post_path):
+            now = datetime.datetime.today()
+            t9 = now.timetuple()
+            ds = "%04d-%02d-%02d %02d:%02d:%02d" % t9[:6]
+            temp_path = os.path.join(os.path.dirname(os.path.abspath(sys.argv[0])),
+                                     "sample-post.txt")
+            post_template = open(temp_path).read()
+            post_template = post_template.replace("2015-01-01 00:00:00", ds)
+            with open(post_path, 'w') as f:
+                f.write(post_template)
         print "Starting editor..."
         os.system("{0} {1}".format(self.config['editor'], post_path))
-
-    def cmd_edit(self, filename):
-        raise NotImplementedError
 
 if __name__ == "__main__":
 
