@@ -54,7 +54,7 @@ NanoBlog does not:
   globally accessible script that runs `python /path/to/nanoblog.py
   "$@"`.
 
-* Create a directory for your blog, say `myblog`.
+* Create a directory for your blog somewhere, e.g. `myblog`.
 
 * Enter that directory and create subdirectories `source` and `html`.
 
@@ -73,12 +73,17 @@ NanoBlog does not:
 * When you want to edit an existing blog post, do the same: `nanoblog
   edit foo`. NanoBlog will not overwrite existing posts.
 
-* When you want to generate HTML file, do `nanoblog build`.
+* When you want to generate HTML file, do `nanoblog build`. This
+  automatically creates a file `index.html` containing links to all
+  posts.
 
 * When you want to upload the contents of the `html` directory
   (including any non-HTML files you might have put there, like
   stylesheets etc) to your FTP server (as configured in `config.txt`),
   do `nanoblog upload`.
+
+* To list all existing posts (plus date of creation and title), do
+  `nanoblog list`.
 
 * That's pretty much it.
 

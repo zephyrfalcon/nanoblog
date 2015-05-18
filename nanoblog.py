@@ -11,11 +11,10 @@ __usage__ = """\
 nanoblog.py command [args...]
 
 Commands:
-    build
-    upload
-    edit <filename>
-    create <filename>
-    list
+    build             Generate HTML files from source.
+    upload            Upload contents of HTML directory to server.
+    edit <filename>   Create or edit the given post.
+    list              Show all existing posts.
 
 """
 
