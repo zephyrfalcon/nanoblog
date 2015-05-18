@@ -1,4 +1,4 @@
-title=My awesome blog
+name=My awesome blog
 description=Some good description here...
 author=John Doe
 ftp_server=ftp.example.com

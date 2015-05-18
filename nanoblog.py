@@ -84,6 +84,7 @@ class NanoBlog:
             temp = self.template
             index_info.append([fn, meta['title'], meta['created']])
             # all of these are optional, in theory:
+            temp = temp.replace('<**NAME**>', self.config['name'])
             temp = temp.replace('<**TITLE**>', meta['title'])
             temp = temp.replace('<**BODY**>', md_data)
             temp = temp.replace('<**CREATED**>', meta['created'][:10])
@@ -109,7 +110,8 @@ class NanoBlog:
         sio.write("</table>\n")
 
         temp = self.template
-        temp = temp.replace("<**TITLE**>", self.config['title'])
+        temp = temp.replace("<**NAME**>", self.config['name'])
+        temp = temp.replace("<**TITLE**>", "contents")
         temp = temp.replace("<**BODY**>", sio.getvalue())
         temp = temp.replace("<**CREATED**>",
                 datetime.datetime.today().isoformat())
