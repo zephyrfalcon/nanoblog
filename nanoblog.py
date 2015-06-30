@@ -18,6 +18,8 @@ Commands:
 
 """
 
+EXTENSIONS = ["markdown.extensions.tables"]
+
 class NanoBlog:
 
     def __init__(self, dir):
@@ -80,7 +82,7 @@ class NanoBlog:
             print "Writing: %s..." % fn,
             full_path = os.path.join(path, fn)
             meta, data = self.read_source_file(full_path)
-            md_data = markdown.markdown(data)
+            md_data = markdown.markdown(data, extensions=EXTENSIONS)
             temp = self.template
             index_info.append([fn, meta['title'], meta['created']])
             # all of these are optional, in theory:
@@ -114,7 +116,7 @@ class NanoBlog:
         temp = temp.replace("<**TITLE**>", "contents")
         temp = temp.replace("<**BODY**>", sio.getvalue())
         temp = temp.replace("<**CREATED**>",
-                datetime.datetime.today().isoformat())
+                datetime.datetime.today().isoformat()[:10])
         out_path = os.path.join(self.dir, "html", "index.html")
         with open(out_path, 'w') as g:
             g.write(temp)
