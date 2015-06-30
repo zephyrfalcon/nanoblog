@@ -139,8 +139,9 @@ class NanoBlog:
             ftp.cwd(self.config['ftp_dir'])
 
             for fn in filenames:
-                print "Uploading: %s..." % fn,
                 full_path = os.path.join(path, fn)
+                if os.path.isdir(full_path): continue # skip directories
+                print "Uploading: %s..." % fn,
                 with open(full_path, 'rb') as f:
                     ftp.storbinary("STOR " + fn, f)
                 print "OK"
