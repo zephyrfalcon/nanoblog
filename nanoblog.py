@@ -1,5 +1,6 @@
 # nanoblog.py
 
+import codecs
 import datetime
 import ftplib
 import os
@@ -31,7 +32,7 @@ class NanoBlog:
     def _read_config(self):
         config = {}
         path = os.path.join(self.dir, "config.txt")
-        with open(path, "r") as f:
+        with codecs.open(path, "r", 'utf-8') as f:
             lines = f.readlines()
         for line in lines:
             line = line.strip() # remove trailing \n and such
@@ -49,7 +50,7 @@ class NanoBlog:
         if not name.endswith(".txt"):
             name = name + ".txt"
         path = os.path.join(self.dir, name)
-        with open(path, "r") as f:
+        with codecs.open(path, "r", "utf-8") as f:
             lines = f.readlines() # keep trailing "\n"
         meta = {}
         cutoff = 0
@@ -91,7 +92,7 @@ class NanoBlog:
             temp = temp.replace('<**BODY**>', md_data)
             temp = temp.replace('<**CREATED**>', meta['created'][:10])
             out_path = os.path.join(self.dir, "html", fn.replace(".txt", ".html"))
-            with open(out_path, 'w') as g:
+            with codecs.open(out_path, 'w', "utf-8") as g:
                 g.write(temp)
             print "OK"
         self._create_index_page(index_info)
@@ -118,7 +119,7 @@ class NanoBlog:
         temp = temp.replace("<**CREATED**>",
                 datetime.datetime.today().isoformat()[:10])
         out_path = os.path.join(self.dir, "html", "index.html")
-        with open(out_path, 'w') as g:
+        with codecs.open(out_path, 'w', 'utf-8') as g:
             g.write(temp)
         print "OK"
 
@@ -144,7 +145,7 @@ class NanoBlog:
                 full_path = os.path.join(path, fn)
                 if os.path.isdir(full_path): continue # skip directories
                 print "Uploading: %s..." % fn,
-                with open(full_path, 'rb') as f:
+                with codecs.open(full_path, 'rb', 'utf-8') as f:
                     ftp.storbinary("STOR " + fn, f)
                 print "OK"
 
@@ -164,7 +165,7 @@ class NanoBlog:
                                      "sample-post.txt")
             post_template = open(temp_path).read()
             post_template = post_template.replace("1900-01-01 00:00:00", ds)
-            with open(post_path, 'w') as f:
+            with codecs.open(post_path, 'w', 'utf-8') as f:
                 f.write(post_template)
         print "Starting editor..."
         os.system("{0} {1}".format(self.config['editor'], post_path))
