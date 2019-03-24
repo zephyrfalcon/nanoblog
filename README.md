@@ -44,7 +44,7 @@ NanoBlog does not:
 
 ### Requirements ###
 
-* Python 2.x
+* Python 3.x
 * [The Markdown library](https://pypi.python.org/pypi/Markdown/)
 
 ### How to use ###
